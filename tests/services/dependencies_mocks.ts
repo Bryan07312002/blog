@@ -8,6 +8,7 @@ import {
     PostPersistenceRepository,
     RegisterDtoValidator,
     UserPersistenceRepository,
+    UserProfilePersistenceRepository,
     UUIDGenerator,
 } from "../../src/services";
 
@@ -16,6 +17,12 @@ export function mockUserPersistenceRepository(): jest.Mocked<UserPersistenceRepo
         create: jest.fn(),
         findByUsernameOrEmail: jest.fn(),
         findByUUID: jest.fn(),
+    };
+}
+
+export function mockUserProfilePersistenceRepository(): jest.Mocked<UserProfilePersistenceRepository> {
+    return {
+        create: jest.fn(),
     };
 }
 

@@ -4,6 +4,7 @@ import {
     RegisterDto,
     RegisterDtoValidator,
     UserPersistenceRepository,
+    UserProfilePersistenceRepository,
     UUIDGenerator,
 } from "../../src/services";
 import { User } from "../../src/models";
@@ -13,12 +14,14 @@ import {
     mockHashRepository,
     mockRegisterDtoValidator,
     mockUserPersistenceRepository,
+    mockUserProfilePersistenceRepository,
     mockUUIDGenerator,
 } from "./dependencies_mocks";
 
 describe("Register", () => {
     let register: Register;
     let userPersistenceRepository: jest.Mocked<UserPersistenceRepository>;
+    let userProfilePersistenceRepository: jest.Mocked<UserProfilePersistenceRepository>;
     let hashRepository: jest.Mocked<HashRepository>;
     let registerDtoValidator: jest.Mocked<RegisterDtoValidator>;
     let uuidGenerator: jest.Mocked<UUIDGenerator>;
@@ -26,12 +29,15 @@ describe("Register", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         userPersistenceRepository = mockUserPersistenceRepository() as any;
+        userProfilePersistenceRepository =
+            mockUserProfilePersistenceRepository() as any;
         hashRepository = mockHashRepository() as any;
         registerDtoValidator = mockRegisterDtoValidator() as any;
         uuidGenerator = mockUUIDGenerator() as any;
 
         register = new Register(
             userPersistenceRepository,
+            userProfilePersistenceRepository,
             hashRepository,
             registerDtoValidator,
             uuidGenerator,
@@ -102,6 +108,39 @@ describe("Register", () => {
 
         expect(userPersistenceRepository.create).toHaveBeenCalledWith(
             expectedUser,
+        );
+    });
+
+    test("should create user profile with the correct data", async () => {
+        const dto = new RegisterDto(
+            "testuser",
+            "test@example.com",
+            "password123",
+        );
+        const mockUUID = "123e4567-e89b-12d3-a456-426614174000" as UUID;
+        const hashedPassword = "hashedPassword";
+
+        uuidGenerator.generate.mockReturnValue(mockUUID);
+        hashRepository.hash.mockResolvedValue(hashedPassword);
+        userPersistenceRepository;
+
+        await register.execute(dto);
+
+        const expectedUser = new User(
+            mockUUID,
+            dto.username,
+            dto.email,
+            hashedPassword,
+            ["Reader"],
+            "Active",
+        );
+
+        expect(userPersistenceRepository.create).toHaveBeenCalledWith(
+            expectedUser,
+        );
+
+        expect(userProfilePersistenceRepository.create).toHaveBeenCalledWith(
+            mockUUID,
         );
     });
 
