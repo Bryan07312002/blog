@@ -11,6 +11,7 @@ export type Middleware = (
 export interface Server {
     get(path: string, middleware: Middleware[], handler: Handler): void;
     post(path: string, middleware: Middleware[], handler: Handler): void;
+    patch(path: string, middlewares: Middleware[], handler: Handler): void;
     put(path: string, middleware: Middleware[], handler: Handler): void;
     delete(path: string, middleware: Middleware[], handler: Handler): void;
     use(middleware: Middleware): void;
