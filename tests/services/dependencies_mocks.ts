@@ -1,5 +1,6 @@
 import {
     HashRepository,
+    JwtRepository,
     RegisterDtoValidator,
     UserPersistenceRepository,
     UUIDGenerator,
@@ -25,4 +26,11 @@ export function mockRegisterDtoValidator(): jest.Mocked<RegisterDtoValidator> {
 
 export function mockUUIDGenerator(): jest.Mocked<UUIDGenerator> {
     return { generate: jest.fn() };
+}
+
+export function mockJwtRepository(): jest.Mocked<JwtRepository> {
+    return {
+        sign: jest.fn(),
+        check: jest.fn(),
+    };
 }
