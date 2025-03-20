@@ -31,6 +31,6 @@ export function mockUUIDGenerator(): jest.Mocked<UUIDGenerator> {
 export function mockJwtRepository(): jest.Mocked<JwtRepository> {
     return {
         sign: jest.fn(),
-        check: jest.fn(),
+        decode: jest.fn(),
     };
 }

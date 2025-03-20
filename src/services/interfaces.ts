@@ -6,7 +6,7 @@ export type Token = string;
 
 export interface JwtRepository {
     sign(userUUID: UUID): Token;
-    check(token: Token): { uuid: UUID };
+    decode(token: Token): { uuid: UUID };
 }
 
 export interface UserPersistenceRepository {
