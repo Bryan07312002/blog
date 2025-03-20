@@ -4,6 +4,7 @@ import { RegisterDto } from "./register";
 
 export interface UserPersistenceRepository {
     create(user: User): Promise<void>;
+    findByUsernameOrEmail(usernameOrEmail: string): Promise<User>;
 }
 
 export interface HashRepository {

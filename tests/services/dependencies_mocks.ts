@@ -6,7 +6,10 @@ import {
 } from "../../src/services";
 
 export function mockUserPersistenceRepository(): jest.Mocked<UserPersistenceRepository> {
-    return { create: jest.fn() };
+    return {
+        create: jest.fn(),
+        findByUsernameOrEmail: jest.fn(),
+    };
 }
 
 export function mockHashRepository(): jest.Mocked<HashRepository> {
