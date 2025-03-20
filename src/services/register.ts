@@ -3,6 +3,7 @@ import {
     HashRepository,
     RegisterDtoValidator,
     UserPersistenceRepository,
+    UserProfilePersistenceRepository,
     UUIDGenerator,
 } from ".";
 
@@ -17,6 +18,7 @@ export class RegisterDto {
 export class Register {
     constructor(
         public userPersistenceRepository: UserPersistenceRepository,
+        public userProfilePersistenceRepository: UserProfilePersistenceRepository,
         public hashRepository: HashRepository,
         public registerDtoValidator: RegisterDtoValidator,
         public uuidGenerator: UUIDGenerator,
@@ -39,6 +41,10 @@ export class Register {
         );
 
         await this.userPersistenceRepository.create(user);
+
+        // FIXME: what if UserProfile fails what should be done?
+        await this.userProfilePersistenceRepository.create(uuid);
+
         return user;
     }
 }

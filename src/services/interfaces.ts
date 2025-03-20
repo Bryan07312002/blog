@@ -15,6 +15,10 @@ export interface UserPersistenceRepository {
     findByUUID(uuid: UUID): Promise<User>;
 }
 
+export interface UserProfilePersistenceRepository {
+    create(userUuid: UUID): Promise<void>;
+}
+
 export interface HashRepository {
     hash(str: string): Promise<string>;
     compare(hashed: string, notHashed: string): Promise<boolean>;
