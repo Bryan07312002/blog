@@ -20,6 +20,7 @@ export function mockUserPersistenceRepository(): jest.Mocked<UserPersistenceRepo
         create: jest.fn(),
         findByUsernameOrEmail: jest.fn(),
         findByUUID: jest.fn(),
+        findFullUserByUUID: jest.fn(),
     };
 }
 
