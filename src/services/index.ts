@@ -7,3 +7,4 @@ export * from "./delete_post";
 export * from "./retrieve_post";
 export * from "./update_profile";
 export * from "./update_profile_photo";
+export * from "./retrieve_full_profile";

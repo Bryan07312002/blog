@@ -1,7 +1,8 @@
 import { UUID } from "crypto";
 
-type UserRole = "Reader" | "Writer" | "Admin";
-type UserState = "Active" | "Inactive" | "Banned";
+// TODO: transform this to enums
+export type UserRole = "Reader" | "Writer" | "Admin";
+export type UserState = "Active" | "Inactive" | "Banned";
 
 export class User {
     constructor(

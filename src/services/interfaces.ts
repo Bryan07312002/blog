@@ -1,8 +1,11 @@
 import { UUID } from "crypto";
-import { User, Post } from "../models";
-import { RegisterDto, CreatePostDto } from ".";
-import { UserProfile } from "../models/user_profile";
-import { UpdateProfileDTO } from "./update_profile";
+import { User, Post, UserProfile } from "../models";
+import {
+    RegisterDto,
+    CreatePostDto,
+    UpdateProfileDTO,
+    FullUserProfile,
+} from ".";
 
 export type Token = string;
 
@@ -15,6 +18,7 @@ export interface UserPersistenceRepository {
     create(user: User): Promise<void>;
     findByUsernameOrEmail(usernameOrEmail: string): Promise<User>;
     findByUUID(uuid: UUID): Promise<User>;
+    findFullUserByUUID(uuid: UUID): Promise<FullUserProfile>;
 }
 
 export interface UserProfilePersistenceRepository {
