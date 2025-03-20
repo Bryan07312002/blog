@@ -7,8 +7,11 @@ import {
     PostFilePersistenceRepository,
     PostPersistenceRepository,
     RegisterDtoValidator,
+    UpdateProfileDtoValidator,
+    UpdateProfilePhotoDtoValidator,
     UserPersistenceRepository,
     UserProfilePersistenceRepository,
+    UserProfilePhotoFilePersistenceRepository,
     UUIDGenerator,
 } from "../../src/services";
 
@@ -66,6 +69,14 @@ export function mockPostFilePersistenceRepository(): jest.Mocked<PostFilePersist
     };
 }
 
+export function mockUserProfilePhotoFilePersistenceRepository(): jest.Mocked<UserProfilePhotoFilePersistenceRepository> {
+    return {
+        getRealUrl: jest.fn(),
+        delete: jest.fn(),
+        save: jest.fn(),
+    };
+}
+
 export function mockCreatePostDtoValidator(): jest.Mocked<CreatePostDtoValidator> {
     return {
         validate: jest.fn(),
@@ -84,6 +95,10 @@ export function mockCanCreatePostPolicies(): jest.Mocked<CanCreatePostPolicies> 
     };
 }
 
-export function mockUpdateProfileDtoValidator() {
+export function mockUpdateProfilePhotoDtoValidator(): jest.Mocked<UpdateProfilePhotoDtoValidator> {
+    return { validate: jest.fn() };
+}
+
+export function mockUpdateProfileDtoValidator(): jest.Mocked<UpdateProfileDtoValidator> {
     return { validate: jest.fn() };
 }
