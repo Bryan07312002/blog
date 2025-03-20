@@ -9,6 +9,7 @@ import {
 export class DeletePostDto {
     constructor(
         public uuid: UUID,
+        // user trying to delete the post
         public user_id: UUID,
     ) {}
 }
