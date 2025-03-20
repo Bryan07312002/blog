@@ -29,9 +29,14 @@ export class Register {
         const uuid = this.uuidGenerator.generate();
 
         // user always starts as reader and admin should change his role
-        const user = new User(uuid, dto.username, dto.email, hashedPassword, [
-            "Reader",
-        ]);
+        const user = new User(
+            uuid,
+            dto.username,
+            dto.email,
+            hashedPassword,
+            ["Reader"],
+            "Active",
+        );
 
         await this.userPersistenceRepository.create(user);
         return user;

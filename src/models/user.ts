@@ -1,6 +1,7 @@
 import { UUID } from "crypto";
 
 type UserRole = "Reader" | "Writer" | "Admin";
+type UserState = "Active" | "Inactive" | "Banned";
 
 export class User {
     constructor(
@@ -9,5 +10,6 @@ export class User {
         public email: string,
         public password: string,
         public userRole: UserRole[],
+        public state: UserState,
     ) {}
 }

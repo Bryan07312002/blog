@@ -97,6 +97,7 @@ describe("Register", () => {
             dto.email,
             hashedPassword,
             ["Reader"],
+            "Active",
         );
 
         expect(userPersistenceRepository.create).toHaveBeenCalledWith(
@@ -124,6 +125,7 @@ describe("Register", () => {
             dto.email,
             hashedPassword,
             ["Reader"],
+            "Active",
         );
 
         expect(result).toEqual(expectedUser);
