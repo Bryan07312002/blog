@@ -43,17 +43,17 @@ export interface PostPersistenceRepository {
     findByUUID(uuid: UUID): Promise<Post>;
 }
 
-export interface UserFilePersistenceRepository {
+export interface FilePersistenceRepository {
     save(path: string, blob: Blob): Promise<void>;
     delete(path: string): Promise<void>;
     getRealUrl(url: string): Promise<string>;
 }
 
-export interface PostFilePersistenceRepository {
-    save(path: string, blob: Blob): Promise<void>;
-    delete(path: string): Promise<void>;
-    getRealUrl(url: string): Promise<string>;
-}
+export interface UserProfilePhotoFilePersistenceRepository
+    extends FilePersistenceRepository {}
+
+export interface PostFilePersistenceRepository
+    extends FilePersistenceRepository {}
 
 export interface CreatePostDtoValidator {
     // should throw if invalid
