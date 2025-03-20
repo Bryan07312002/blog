@@ -1,5 +1,6 @@
 import {
     CanCreatePostPolicies,
+    CanDeletePostPolicies,
     CreatePostDtoValidator,
     HashRepository,
     JwtRepository,
@@ -44,6 +45,7 @@ export function mockPostPersistenceRepository(): jest.Mocked<PostPersistenceRepo
     return {
         delete: jest.fn(),
         create: jest.fn(),
+        findByUUID: jest.fn(),
     };
 }
 
@@ -58,6 +60,12 @@ export function mockPostFilePersistenceRepository(): jest.Mocked<PostFilePersist
 export function mockCreatePostDtoValidator(): jest.Mocked<CreatePostDtoValidator> {
     return {
         validate: jest.fn(),
+    };
+}
+
+export function mockCanDeletePostPolicies(): jest.Mocked<CanDeletePostPolicies> {
+    return {
+        check: jest.fn(),
     };
 }
 
