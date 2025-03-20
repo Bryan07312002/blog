@@ -1,6 +1,8 @@
 import { UUID } from "crypto";
 import { User, Post } from "../models";
 import { RegisterDto, CreatePostDto } from ".";
+import { UserProfile } from "../models/user_profile";
+import { UpdateProfileDTO } from "./update_profile";
 
 export type Token = string;
 
@@ -17,6 +19,8 @@ export interface UserPersistenceRepository {
 
 export interface UserProfilePersistenceRepository {
     create(userUuid: UUID): Promise<void>;
+    update(profile: UserProfile): Promise<void>;
+    findByUserUUID(userUuid: UUID): Promise<UserProfile>;
 }
 
 export interface HashRepository {
@@ -39,6 +43,12 @@ export interface PostPersistenceRepository {
     findByUUID(uuid: UUID): Promise<Post>;
 }
 
+export interface UserFilePersistenceRepository {
+    save(path: string, blob: Blob): Promise<void>;
+    delete(path: string): Promise<void>;
+    getRealUrl(url: string): Promise<string>;
+}
+
 export interface PostFilePersistenceRepository {
     save(path: string, blob: Blob): Promise<void>;
     delete(path: string): Promise<void>;
@@ -48,6 +58,11 @@ export interface PostFilePersistenceRepository {
 export interface CreatePostDtoValidator {
     // should throw if invalid
     validate(dto: CreatePostDto): Promise<void>;
+}
+
+export interface UpdateProfileDtoValidator {
+    // should throw if invalid
+    validate(dto: UpdateProfileDTO): Promise<void>;
 }
 
 export interface CanCreatePostPolicies {
