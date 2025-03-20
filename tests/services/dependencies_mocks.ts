@@ -23,6 +23,8 @@ export function mockUserPersistenceRepository(): jest.Mocked<UserPersistenceRepo
 export function mockUserProfilePersistenceRepository(): jest.Mocked<UserProfilePersistenceRepository> {
     return {
         create: jest.fn(),
+        update: jest.fn(),
+        findByUserUUID: jest.fn(),
     };
 }
 
@@ -80,4 +82,8 @@ export function mockCanCreatePostPolicies(): jest.Mocked<CanCreatePostPolicies> 
     return {
         check: jest.fn(),
     };
+}
+
+export function mockUpdateProfileDtoValidator() {
+    return { validate: jest.fn() };
 }
