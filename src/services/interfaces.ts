@@ -32,6 +32,7 @@ export interface RegisterDtoValidator {
 export interface PostPersistenceRepository {
     create(post: Post): Promise<void>;
     delete(uuid: UUID): Promise<void>;
+    findByUUID(uuid: UUID): Promise<Post>;
 }
 
 export interface PostFilePersistenceRepository {
@@ -48,4 +49,9 @@ export interface CreatePostDtoValidator {
 export interface CanCreatePostPolicies {
     // should throw if policies rejects
     check(user: User): void;
+}
+
+export interface CanDeletePostPolicies {
+    // should throw if policies rejects
+    check(user: User, post: Post): void;
 }
