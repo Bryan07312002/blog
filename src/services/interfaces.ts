@@ -2,6 +2,13 @@ import { UUID } from "crypto";
 import { User } from "../models/user";
 import { RegisterDto } from "./register";
 
+export type Token = string;
+
+export interface JwtRepository {
+    sign(userUUID: UUID): Token;
+    check(token: Token): { uuid: UUID };
+}
+
 export interface UserPersistenceRepository {
     create(user: User): Promise<void>;
     findByUsernameOrEmail(usernameOrEmail: string): Promise<User>;
@@ -9,7 +16,7 @@ export interface UserPersistenceRepository {
 
 export interface HashRepository {
     hash(str: string): Promise<string>;
-    compare(hashed: string, notHashed: string): Promise<void>;
+    compare(hashed: string, notHashed: string): Promise<boolean>;
 }
 
 export interface UUIDGenerator {
