@@ -1,6 +1,35 @@
 import { IncomingMessage, ServerResponse } from "http";
 
-export type Handler = (req: IncomingMessage, res: ServerResponse) => void;
+export class ApiRequest extends Request {
+    async string(): Promise<string> {
+        if (!this.body) {
+            throw "body is null";
+        }
+
+        const reader = this.body.getReader();
+        let result = "";
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            // Convert Uint8Array to string
+            result += new TextDecoder().decode(value);
+        }
+
+        return result;
+    }
+
+    async json(): Promise<unknown> {
+        if (this.headers.get("content-type") != "application/json")
+            throw "request not json";
+
+        const jsonString = await this.string();
+        return JSON.parse(jsonString);
+    }
+}
+
+export type Handler = (req: ApiRequest, res: ServerResponse) => void;
 
 export type Middleware = (
     req: IncomingMessage,

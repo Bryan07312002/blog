@@ -4,8 +4,8 @@ import fastify, {
     FastifyRequest,
     HookHandlerDoneFunction,
 } from "fastify";
-import { Handler, Middleware, Server } from ".";
 
+import { ApiRequest, Handler, Middleware, Server } from ".";
 export type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
 export class FastifyServer implements Server {
@@ -13,6 +13,13 @@ export class FastifyServer implements Server {
 
     constructor() {
         this.server = fastify();
+        this.server.addContentTypeParser(
+            "application/json",
+            { parseAs: "buffer" },
+            (_, body, done) => {
+                done(null, body);
+            },
+        );
     }
 
     get(path: string, middlewares: Middleware[], handler: Handler): void {
@@ -70,8 +77,39 @@ export class FastifyServer implements Server {
             method,
             preHandler,
             handler: async (request: FastifyRequest, reply: FastifyReply) => {
-                handler(request.raw, reply.raw);
+                return handler(
+                    this.fastifyRequestToApiRequest(request),
+                    reply.raw,
+                );
             },
         });
+    }
+
+    private fastifyRequestToApiRequest(
+        fastifyRequest: FastifyRequest,
+    ): ApiRequest {
+        const headers = new Headers();
+        for (const [key, value] of Object.entries(fastifyRequest.headers)) {
+            if (Array.isArray(value)) {
+                value.forEach((v) => headers.append(key, v));
+            } else if (value !== undefined) {
+                headers.set(key, value as any);
+            }
+        }
+
+        const body: unknown =
+            fastifyRequest.method !== "GET" && fastifyRequest.method !== "HEAD"
+                ? fastifyRequest.body
+                : null;
+
+        // FIXME: create the real url
+        return new ApiRequest(
+            new URL(`http://localhost/${fastifyRequest.url}`),
+            {
+                method: fastifyRequest.method,
+                headers: headers,
+                body: body as Buffer,
+            },
+        );
     }
 }
