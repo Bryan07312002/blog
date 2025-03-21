@@ -7,7 +7,7 @@ import { RequestValidator } from "../controllers";
 export class ZodRegisterRequestValidator
     implements RequestValidator<RegisterDto>
 {
-    validate(body: unknown): body is RegisterDto {
+    validate(body: unknown): RegisterDto {
         const schema = z.object({
             username: z.string(),
             email: z.string(),
@@ -16,7 +16,12 @@ export class ZodRegisterRequestValidator
 
         try {
             schema.parse(body);
-            return true;
+
+            return new RegisterDto(
+                (body as any).username,
+                (body as any).email,
+                (body as any).password,
+            );
         } catch (e) {
             if (e instanceof ZodError) throw toApiError(e);
 
