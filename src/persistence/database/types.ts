@@ -12,7 +12,7 @@ export interface UsersTable {
     username: string;
     email: string;
     password: string;
-    userRole: UserRole[];
+    role: UserRole[];
     state: UserState;
 }
 
