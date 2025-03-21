@@ -40,7 +40,7 @@ export class FastifyServer implements Server {
     }
 
     listen(port: number, callback: () => void): void {
-        this.server.listen({ port }, callback);
+        this.server.listen({ port, host: "0.0.0.0" }, callback);
     }
 
     private toFastifyMiddleware(middleware: Middleware) {

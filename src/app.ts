@@ -21,7 +21,7 @@ export class App {
 
     registerRoutes() {
         this.server.get("/health", [], (_, res) => {
-            res.writeHead(200, { "content-type": "text/html" });
+            res.writeHead(200, { "content-type": "application/html" });
             res.end(JSON.stringify({ status: "Ok" }));
         });
     }
