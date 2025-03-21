@@ -9,7 +9,11 @@ import {
     UserPersistenceRepository,
     UserProfilePersistenceRepository,
     HashRepository,
+    RegisterDtoValidator,
+    UUIDGenerator,
 } from "../services";
+import { ZodRegisterDtoValidator } from "../validators";
+import { CryptoUuidGenerator } from "../uuid";
 
 export class RepositoryFactory {
     constructor(
@@ -30,14 +34,32 @@ export class RepositoryFactory {
     }
 }
 
-export class ServiceFactory extends RepositoryFactory {
-    createRegisterService(): Register {
-        throw "";
+export class ValidatorFactory {
+    createRegisterDtoValidator(): RegisterDtoValidator {
+        return new ZodRegisterDtoValidator();
+    }
+}
 
-        new Register(
-            this.createUserPersistenceRepository(),
-            this.createProfilePersistenceRepository(),
-            this.createHashRepository(),
+export class UUIDGeneratorFactory {
+    createUUIDGenerator(): UUIDGenerator {
+        return new CryptoUuidGenerator();
+    }
+}
+
+export class ServiceFactory {
+    constructor(
+        public repositoryFactory: RepositoryFactory,
+        public validatorFactory: ValidatorFactory,
+        public uuiDGeneratorFactory: UUIDGeneratorFactory,
+    ) {}
+
+    createRegisterService(): Register {
+        return new Register(
+            this.repositoryFactory.createUserPersistenceRepository(),
+            this.repositoryFactory.createProfilePersistenceRepository(),
+            this.repositoryFactory.createHashRepository(),
+            this.validatorFactory.createRegisterDtoValidator(),
+            this.uuiDGeneratorFactory.createUUIDGenerator(),
         );
     }
 }

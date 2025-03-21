@@ -1,10 +1,24 @@
-import { IncomingMessage, ServerResponse } from "http";
-import { Handler } from "../server";
+import { ServerResponse } from "http";
+import { Register } from "../services";
+import { Controller } from ".";
+import { ApiRequest } from "../server";
 
-export interface Controller {
-    handler: Handler;
+export interface RegisterFactory {
+    createRegisterService(): Register;
 }
 
-export class Register implements Controller {
-    handler(req: IncomingMessage, res: ServerResponse) {}
+export interface RequestValidator {
+    validate(body: unknown): void;
+}
+
+export class RegisterController implements Controller {
+    constructor(public registerFactory: RegisterFactory) {}
+
+    async handler(req: ApiRequest, res: ServerResponse) {
+        if (!req.body) return res.end();
+
+        console.log(await req.json());
+
+        return res.end();
+    }
 }
