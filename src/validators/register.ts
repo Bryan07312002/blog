@@ -1,18 +1,22 @@
 import { RegisterDto, RegisterDtoValidator } from "../services";
 import { z, ZodError } from "zod";
 import { toApiError } from "./errors";
+import { RequestValidator } from "../controllers";
 
 // check for typeing
-export class ZodRegisterRequestValidator implements RegisterDtoValidator {
-    async validate(dto: RegisterDto): Promise<void> {
+export class ZodRegisterRequestValidator
+    implements RequestValidator<RegisterDto>
+{
+    validate(body: unknown): body is RegisterDto {
         const schema = z.object({
             username: z.string(),
             email: z.string(),
-            passoword: z.string(),
+            password: z.string(),
         });
 
         try {
-            schema.parse(dto);
+            schema.parse(body);
+            return true;
         } catch (e) {
             if (e instanceof ZodError) throw toApiError(e);
 

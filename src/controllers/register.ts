@@ -1,24 +1,30 @@
 import { ServerResponse } from "http";
-import { Register } from "../services";
-import { Controller } from ".";
+import { Register, RegisterDto } from "../services";
+import { Controller, RequestValidator } from ".";
 import { ApiRequest } from "../server";
 
 export interface RegisterFactory {
     createRegisterService(): Register;
 }
 
-export interface RequestValidator {
-    validate(body: unknown): void;
-}
-
 export class RegisterController implements Controller {
-    constructor(public registerFactory: RegisterFactory) {}
+    constructor(
+        public registerFactory: RegisterFactory,
+        public requestValidator: RequestValidator<RegisterDto>,
+    ) {}
 
     async handler(req: ApiRequest, res: ServerResponse) {
         if (!req.body) return res.end();
+        const body = await req.json();
 
-        console.log(await req.json());
+        if (!this.requestValidator.validate(body)) {
+            throw "some 400 error";
+        }
 
-        return res.end();
+        const service = this.registerFactory.createRegisterService();
+        const user = await service.execute(body);
+
+        res.writeHead(201, { "content-type": "application-json" });
+        return res.end(JSON.stringify(user));
     }
 }

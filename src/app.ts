@@ -46,7 +46,10 @@ export class App {
         this.server.post(
             "/register",
             [],
-            new RegisterController(this.serviceFactory).handler,
+            new RegisterController(
+                this.serviceFactory,
+                this.serviceFactory.validatorFactory.createRegisterRequestValidator(),
+            ).handler,
         );
     }
 

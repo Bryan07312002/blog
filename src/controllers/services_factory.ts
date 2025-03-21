@@ -11,9 +11,14 @@ import {
     HashRepository,
     RegisterDtoValidator,
     UUIDGenerator,
+    RegisterDto,
 } from "../services";
-import { ZodRegisterDtoValidator } from "../validators";
+import {
+    ZodRegisterDtoValidator,
+    ZodRegisterRequestValidator,
+} from "../validators";
 import { CryptoUuidGenerator } from "../uuid";
+import { RequestValidator } from ".";
 
 export class RepositoryFactory {
     constructor(
@@ -37,6 +42,10 @@ export class RepositoryFactory {
 export class ValidatorFactory {
     createRegisterDtoValidator(): RegisterDtoValidator {
         return new ZodRegisterDtoValidator();
+    }
+
+    createRegisterRequestValidator(): RequestValidator<RegisterDto> {
+        return new ZodRegisterRequestValidator();
     }
 }
 
