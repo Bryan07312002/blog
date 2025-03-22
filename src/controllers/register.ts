@@ -11,18 +11,17 @@ export class RegisterController implements Controller {
     constructor(
         public registerFactory: RegisterFactory,
         public requestValidator: RequestValidator<RegisterDto>,
-    ) {}
+    ) {
+        this.handler = this.handler.bind(this);
+    }
 
     async handler(req: ApiRequest, res: ServerResponse) {
-        if (!req.body) return res.end();
-        const body = await req.json();
-
-        const dto = this.requestValidator.validate(body);
+        const dto = this.requestValidator.validate(await req?.json());
 
         const service = this.registerFactory.createRegisterService();
         const user = await service.execute(dto);
 
         res.writeHead(201, { "content-type": "application-json" });
-        return res.end(JSON.stringify(user));
+        res.end(JSON.stringify(user));
     }
 }
