@@ -30,7 +30,7 @@ export class Register {
         const hashedPassword = await this.hashRepository.hash(dto.password);
         const uuid = this.uuidGenerator.generate();
 
-        // user always starts as reader and admin should change his role
+        // user always starts as reader and a admin user should change his role
         const user = new User(
             uuid,
             dto.username,
@@ -42,7 +42,7 @@ export class Register {
 
         await this.userPersistenceRepository.create(user);
 
-        // FIXME: what if UserProfile fails what should be done?
+        // FIXME: what if UserProfile fails to create what should be done?
         await this.userProfilePersistenceRepository.create(uuid);
 
         return user;
