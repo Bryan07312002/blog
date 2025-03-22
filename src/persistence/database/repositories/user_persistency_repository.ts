@@ -8,8 +8,18 @@ export class KyselyUserPersistenceRepository
 {
     constructor(private readonly conn: KyselyDatabaseConnection) {}
 
-    create(user: User): Promise<void> {
-        throw new Error("Method not implemented.");
+    async create(user: User): Promise<void> {
+        await this.conn
+            .insertInto("users")
+            .values({
+                uuid: user.uuid,
+                email: user.email,
+                username: user.username,
+                role: user.userRole,
+                state: user.state,
+                password: user.password,
+            })
+            .execute();
     }
 
     findByUsernameOrEmail(usernameOrEmail: string): Promise<User> {
