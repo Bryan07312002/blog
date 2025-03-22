@@ -10,7 +10,7 @@ export class KyselyDatabaseConnection extends Kysely<Database> {
                 pool: new Pool({
                     host: conf.host,
                     port: conf.port,
-                    user: conf.host,
+                    user: conf.user,
                     password: conf.password,
                     database: conf.database,
                 }),
