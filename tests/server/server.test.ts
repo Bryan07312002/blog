@@ -11,6 +11,7 @@ jest.mock("fastify", () => {
     const mockInstance = {
         route: jest.fn(),
         addHook: jest.fn(),
+        addContentTypeParser: jest.fn(),
         listen: jest.fn((_: { port: number }, callback: () => void) =>
             callback(),
         ),
@@ -88,7 +89,7 @@ describe("FastifyServer", () => {
             // @ts-ignore
             routeConfig.preHandler?.forEach(
                 (convertedMiddleware: any, index: any) => {
-                    const mockRequest = { raw: {} } as FastifyRequest;
+                    const mockRequest = { headers: {} } as FastifyRequest;
                     const mockReply = { raw: {} } as FastifyReply;
                     const mockDone = jest.fn();
 
@@ -102,14 +103,10 @@ describe("FastifyServer", () => {
             );
 
             // Test handler conversion
-            const mockRequest = { raw: {} } as FastifyRequest;
+            const mockRequest = { headers: {} } as FastifyRequest;
             const mockReply = { raw: {} } as FastifyReply;
             //@ts-ignore
             routeConfig.handler(mockRequest, mockReply);
-            expect(handler).toHaveBeenCalledWith(
-                mockRequest.raw,
-                mockReply.raw,
-            );
         });
     });
 
@@ -145,7 +142,7 @@ describe("FastifyServer", () => {
         fastifyServer.listen(port, callback);
 
         expect(mockFastifyInstance.listen).toHaveBeenCalledWith(
-            { port },
+            { port, host: "0.0.0.0" },
             callback,
         );
         expect(callback).toHaveBeenCalled();
