@@ -12,5 +12,10 @@ export function toApiError(err: ZodError): ApiError {
         msg.push({ field: issue.path[0].toString(), message: issue.message });
     });
 
-    return new ApiError(422, err.message, ErrorType.Validation, msg);
+    return new ApiError(
+        422,
+        "fail to validate request",
+        ErrorType.Validation,
+        msg,
+    );
 }
