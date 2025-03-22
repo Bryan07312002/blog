@@ -1,4 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
+import { validationError } from "../error";
 
 export class ApiRequest extends Request {
     async string(): Promise<string> {
@@ -22,7 +23,7 @@ export class ApiRequest extends Request {
 
     async json(): Promise<unknown> {
         if (this.headers.get("content-type") != "application/json")
-            throw "request not json";
+            throw validationError("expected request to be json");
 
         const jsonString = await this.string();
         return JSON.parse(jsonString);
