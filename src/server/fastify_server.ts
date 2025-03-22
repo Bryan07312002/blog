@@ -38,7 +38,6 @@ export class FastifyServer implements Server {
             // Customize the error response
             reply.status(500).send({
                 error: "Internal Server Error",
-                message: error.message,
             });
         });
     }
