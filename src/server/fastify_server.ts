@@ -14,6 +14,7 @@ export class FastifyServer implements Server {
 
     constructor() {
         this.server = fastify();
+
         // this is needed to overwrite fastify json parser so
         // we can get the buffer in handler to transform to Request object
         this.server.addContentTypeParser(
@@ -23,10 +24,12 @@ export class FastifyServer implements Server {
                 done(null, body);
             },
         );
+
+        // TODO: should add logging here for unknown error
+        // TODO: change this to another function
         this.server.setErrorHandler((error, _, reply) => {
-            console.log(error);
             if (error instanceof ApiError)
-                reply.status(error.statusCode).send({
+                return reply.status(error.statusCode).send({
                     error: error.error,
                     message: error.message,
                     details: error.details,
