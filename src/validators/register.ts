@@ -35,7 +35,7 @@ export class ZodRegisterDtoValidator implements RegisterDtoValidator {
         const schema = z.object({
             username: z.string().min(5).max(255),
             email: z.string().min(5).max(255),
-            passoword: z.string().min(5).max(100),
+            password: z.string().min(5).max(100),
         });
 
         try {
