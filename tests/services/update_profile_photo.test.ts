@@ -76,7 +76,7 @@ describe("UpdateProfilePhoto", () => {
     });
 
     test("should delete the old photo if it exists", async () => {
-        const old_profile_photo_path = profile.profile_photo_url;
+        const old_profile_photo_path = profile.profilePhotoUrl;
         userProfilePersistenceRepository.findByUserUUID.mockResolvedValue(
             profile,
         );
@@ -107,7 +107,7 @@ describe("UpdateProfilePhoto", () => {
 
         await updateProfilePhoto.execute(dto);
 
-        expect(profile.profile_photo_url).toBe(dto.userUuid);
+        expect(profile.profilePhotoUrl).toBe(dto.userUuid);
         expect(userProfilePersistenceRepository.update).toHaveBeenCalledWith(
             profile,
         );
@@ -138,7 +138,7 @@ describe("UpdateProfilePhoto", () => {
     });
 
     test("should not delete the old photo if it does not exist", async () => {
-        profile.profile_photo_url = undefined;
+        profile.profilePhotoUrl = undefined;
         userProfilePersistenceRepository.findByUserUUID.mockResolvedValue(
             profile,
         );

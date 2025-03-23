@@ -17,7 +17,7 @@ export interface UsersTable {
 }
 
 export interface UserProfilesTable {
-    userUuid: UUID;
+    user_uuid: UUID;
     title?: string;
     bio?: string;
     profile_photo_url?: string;

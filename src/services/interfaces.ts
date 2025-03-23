@@ -4,7 +4,7 @@ import {
     RegisterDto,
     CreatePostDto,
     UpdateProfileDTO,
-    FullUserProfile,
+    FullUserProfileDto,
 } from ".";
 
 export type Token = string;
@@ -18,7 +18,7 @@ export interface UserPersistenceRepository {
     create(user: User): Promise<void>;
     findByUsernameOrEmail(usernameOrEmail: string): Promise<User>;
     findByUUID(uuid: UUID): Promise<User>;
-    findFullUserByUUID(uuid: UUID): Promise<FullUserProfile>;
+    findFullUserByUUID(uuid: UUID): Promise<FullUserProfileDto>;
 }
 
 export interface UserProfilePersistenceRepository {

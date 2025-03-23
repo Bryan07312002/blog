@@ -1,7 +1,7 @@
 import { UUID } from "crypto";
 import {
     RetrieveFullUserProfile,
-    FullUserProfile,
+    FullUserProfileDto,
     UserPersistenceRepository,
     UserProfilePhotoFilePersistenceRepository,
 } from "../../src/services";
@@ -10,6 +10,7 @@ import {
     mockUserProfilePhotoFilePersistenceRepository,
 } from "./dependencies_mocks";
 import { jest } from "@jest/globals";
+import { Role, State } from "../../src/models";
 
 describe("RetrieveFullUserProfile", () => {
     let retrieveFullUserProfile: RetrieveFullUserProfile;
@@ -17,7 +18,7 @@ describe("RetrieveFullUserProfile", () => {
     let userProfilePhotoFilePersistenceRepository: jest.Mocked<UserProfilePhotoFilePersistenceRepository>;
 
     let userUuid: UUID;
-    let fullUserProfile: FullUserProfile;
+    let fullUserProfile: FullUserProfileDto;
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -31,19 +32,19 @@ describe("RetrieveFullUserProfile", () => {
         );
 
         userUuid = "user-uuid" as UUID;
-        fullUserProfile = new FullUserProfile(
-            userUuid,
-            "testuser",
-            "test@example.com",
-            ["Reader"],
-            "Active",
-            "Test Title",
-            "Test Bio",
-            "photo-url",
-            "Test City",
-            "Test Company",
-            "Test University",
-        );
+        fullUserProfile = new FullUserProfileDto({
+            uuid: userUuid,
+            username: "testuser",
+            email: "test@example.com",
+            role: [Role.Reader],
+            state: State.Active,
+            title: "Test Title",
+            bio: "Test Bio",
+            photo_url: "photo-url",
+            lives_in: "Test City",
+            works_at: "Test Company",
+            studie_at: "Test University",
+        });
     });
 
     test("should fetch the full user profile by UUID", async () => {

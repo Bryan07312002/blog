@@ -1,4 +1,4 @@
-import { User } from "../models";
+import { Role, State, User } from "../models";
 import {
     HashRepository,
     RegisterDtoValidator,
@@ -36,8 +36,8 @@ export class Register {
             dto.username,
             dto.email,
             hashedPassword,
-            ["Reader"],
-            "Active",
+            [Role.Reader],
+            State.Active,
         );
 
         await this.userPersistenceRepository.create(user);

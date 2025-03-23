@@ -1,8 +1,15 @@
 import { UUID } from "crypto";
 
-// TODO: transform this to enums
-export type UserRole = "Reader" | "Writer" | "Admin";
-export type UserState = "Active" | "Inactive" | "Banned";
+export enum Role {
+    Reader = "reader",
+    Writer = "writer",
+    Admin = "admin",
+}
+export enum State {
+    Active = "active",
+    Inactive = "inactive",
+    Banned = "banned",
+}
 
 export class User {
     constructor(
@@ -10,7 +17,7 @@ export class User {
         public username: string,
         public email: string,
         public password: string,
-        public userRole: UserRole[],
-        public state: UserState,
+        public role: Role[],
+        public state: State,
     ) {}
 }

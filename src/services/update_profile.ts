@@ -31,9 +31,9 @@ export class UpdateProfile {
 
         if (dto.profile.title) profile.title = dto.profile.title;
         if (dto.profile.bio) profile.bio = dto.profile.bio;
-        if (dto.profile.lives_in) profile.lives_in = dto.profile.lives_in;
-        if (dto.profile.works_at) profile.works_at = dto.profile.works_at;
-        if (dto.profile.studie_at) profile.studie_at = dto.profile.studie_at;
+        if (dto.profile.lives_in) profile.livesIn = dto.profile.lives_in;
+        if (dto.profile.works_at) profile.worksAt = dto.profile.works_at;
+        if (dto.profile.studie_at) profile.studieAt = dto.profile.studie_at;
 
         await this.userProfilePersistenceRepository.update(profile);
 

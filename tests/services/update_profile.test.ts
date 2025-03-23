@@ -83,9 +83,9 @@ describe("UpdateProfile", () => {
 
         expect(profile.title).toBe(dto.profile.title);
         expect(profile.bio).toBe(dto.profile.bio);
-        expect(profile.lives_in).toBe(dto.profile.lives_in);
-        expect(profile.works_at).toBe(dto.profile.works_at);
-        expect(profile.studie_at).toBe(dto.profile.studie_at);
+        expect(profile.livesIn).toBe(dto.profile.lives_in);
+        expect(profile.worksAt).toBe(dto.profile.works_at);
+        expect(profile.studieAt).toBe(dto.profile.studie_at);
     });
 
     test("should save the updated profile", async () => {

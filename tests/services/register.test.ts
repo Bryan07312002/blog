@@ -7,7 +7,7 @@ import {
     UserProfilePersistenceRepository,
     UUIDGenerator,
 } from "../../src/services";
-import { User } from "../../src/models";
+import { Role, State, User } from "../../src/models";
 import { UUID } from "crypto";
 import { jest } from "@jest/globals";
 import {
@@ -102,8 +102,8 @@ describe("Register", () => {
             dto.username,
             dto.email,
             hashedPassword,
-            ["Reader"],
-            "Active",
+            [Role.Reader],
+            State.Active,
         );
 
         expect(userPersistenceRepository.create).toHaveBeenCalledWith(
@@ -131,8 +131,8 @@ describe("Register", () => {
             dto.username,
             dto.email,
             hashedPassword,
-            ["Reader"],
-            "Active",
+            [Role.Reader],
+            State.Active,
         );
 
         expect(userPersistenceRepository.create).toHaveBeenCalledWith(
@@ -163,8 +163,8 @@ describe("Register", () => {
             dto.username,
             dto.email,
             hashedPassword,
-            ["Reader"],
-            "Active",
+            [Role.Reader],
+            State.Active,
         );
 
         expect(result).toEqual(expectedUser);

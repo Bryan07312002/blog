@@ -12,6 +12,7 @@ jest.mock("fastify", () => {
         route: jest.fn(),
         addHook: jest.fn(),
         addContentTypeParser: jest.fn(),
+        setErrorHandler: jest.fn(),
         listen: jest.fn((_: { port: number }, callback: () => void) =>
             callback(),
         ),

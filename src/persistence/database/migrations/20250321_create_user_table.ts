@@ -1,7 +1,7 @@
 import { Kysely, sql } from "kysely";
 
 export async function up(db: Kysely<any>): Promise<void> {
-    db.schema.createType("role").asEnum(["Reader", "Writer", "Admin"]);
+    db.schema.createType("role").asEnum(["reader", "writer", "admin"]);
 
     db.schema
         .createTable("users")

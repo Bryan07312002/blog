@@ -5,7 +5,7 @@ import {
     HashRepository,
     JwtRepository,
 } from "../../src/services";
-import { User } from "../../src/models";
+import { Role, State, User } from "../../src/models";
 import { UUID } from "crypto";
 import { jest } from "@jest/globals";
 import {
@@ -39,8 +39,8 @@ describe("Login", () => {
             "testuser",
             "test@example.com",
             "hashedPassword",
-            ["Reader"],
-            "Active",
+            [Role.Reader],
+            State.Active,
         );
     });
 

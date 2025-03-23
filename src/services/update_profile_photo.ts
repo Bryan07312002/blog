@@ -29,9 +29,9 @@ export class UpdateProfilePhoto {
                 dto.userUuid,
             );
 
-        if (profile.profile_photo_url)
+        if (profile.profilePhotoUrl)
             await this.userProfilePhotoFilePersistenceRepository.delete(
-                profile.profile_photo_url,
+                profile.profilePhotoUrl,
             );
 
         await this.userProfilePhotoFilePersistenceRepository.save(
@@ -39,7 +39,7 @@ export class UpdateProfilePhoto {
             dto.photo,
         );
 
-        profile.profile_photo_url = dto.userUuid;
+        profile.profilePhotoUrl = dto.userUuid;
 
         await this.userProfilePersistenceRepository.update(profile);
     }

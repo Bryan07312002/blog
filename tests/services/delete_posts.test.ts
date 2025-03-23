@@ -7,7 +7,7 @@ import {
     DeletePostDto,
     DeletePost,
 } from "../../src/services";
-import { Post, User } from "../../src/models";
+import { Post, Role, State, User } from "../../src/models";
 import { jest } from "@jest/globals";
 import {
     mockPostPersistenceRepository,
@@ -47,8 +47,8 @@ describe("DeletePost", () => {
             "testuser",
             "test@example.com",
             "hashedPassword",
-            ["Reader"],
-            "Active",
+            [Role.Reader],
+            State.Active,
         );
         post = new Post(
             "post-uuid" as UUID,

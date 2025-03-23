@@ -8,7 +8,7 @@ import {
     UserPersistenceRepository,
     UUIDGenerator,
 } from "../../src/services";
-import { Post, User } from "../../src/models";
+import { Post, Role, State, User } from "../../src/models";
 import { UUID } from "crypto";
 import { jest } from "@jest/globals";
 import {
@@ -56,8 +56,8 @@ describe("CreatePost", () => {
             "testuser",
             "test@example.com",
             "hashedPassword",
-            ["Reader"],
-            "Active",
+            [Role.Reader],
+            State.Active,
         );
     });
 
