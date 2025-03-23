@@ -36,6 +36,8 @@ export class FastifyServer implements Server {
                 });
 
             // Customize the error response
+            // TODO: add here check if env is dev or production
+            // to return error or not
             reply.status(500).send({
                 error: "Internal Server Error",
             });
