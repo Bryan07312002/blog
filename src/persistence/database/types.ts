@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import { UserRole, UserState } from "../../models";
+import { Role, State } from "../../models";
 
 export type Database = {
     users: UsersTable;
@@ -12,8 +12,8 @@ export interface UsersTable {
     username: string;
     email: string;
     password: string;
-    role: UserRole[];
-    state: UserState;
+    role: Role[];
+    state: State;
 }
 
 export interface UserProfilesTable {
