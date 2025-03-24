@@ -1,26 +1,4 @@
 services:
-  app:
-    build:
-      context: ../
-      dockerfile: Dockerfile
-    container_name: blog
-    restart: unless-stopped
-    env_file: ../.env
-    environment:
-      - PG_HOST=${PG_HOST}
-      - PG_PORT=${PG_PORT}
-      - PG_USER=${PG_USER}
-      - PG_PASSWORD=${PG_PASSWORD}
-      - PG_DATABASE=${PG_DATABASE}
-    depends_on:
-      - db
-    volumes:
-      - ../:/app
-    ports:
-      - "3000:3000"
-    networks:
-      - app-network
-
   db:
     image: postgres:13
     container_name: postgres_db
@@ -32,8 +10,44 @@ services:
       POSTGRES_DB: ${PG_DATABASE}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER} -d ${PG_DATABASE}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  app_config: &app_config
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    env_file: ../.env
+    environment:
+      - PG_HOST=db
+      - PG_PORT=${PG_PORT}
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_DATABASE=${PG_DATABASE}
+    volumes:
+      - ../:/app
+
+  migrate:
+    <<: *app_config
+    container_name: blog-migrate
+    command: npm run migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  app:
+    <<: *app_config
+    container_name: blog
+    restart: unless-stopped
+    depends_on:
+      - migrate
+      - db
+    ports:
+      - "3000:3000"
 
   nginx:
     image: nginx:latest
@@ -45,12 +59,6 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - app
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
 
 volumes:
   postgres_data:
