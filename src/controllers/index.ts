@@ -1,5 +1,3 @@
-export * from "./register";
-
 import { ServerResponse } from "http";
 import { ApiRequest } from "../server";
 
@@ -16,3 +14,7 @@ export abstract class Controller {
         throw "handler not implemented";
     }
 }
+
+export * from "./register";
+export * from "./login";
+export * from "./retrieve_full_user";
