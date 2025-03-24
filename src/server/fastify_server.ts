@@ -1,13 +1,11 @@
+import { ApiRequest, Handler, Middleware, Server, Method } from ".";
+import { ApiError } from "../error";
 import fastify, {
     FastifyInstance,
     FastifyReply,
     FastifyRequest,
     HookHandlerDoneFunction,
 } from "fastify";
-
-import { ApiRequest, Handler, Middleware, Server } from ".";
-import { ApiError } from "../error";
-export type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
 export class FastifyServer implements Server {
     server: FastifyInstance;
@@ -35,6 +33,7 @@ export class FastifyServer implements Server {
                     details: error.details,
                 });
 
+            console.log(error);
             // Customize the error response
             // TODO: add here check if env is dev or production
             // to return error or not
@@ -78,7 +77,11 @@ export class FastifyServer implements Server {
             reply: FastifyReply,
             done: HookHandlerDoneFunction,
         ) => {
-            return middleware(request.raw, reply.raw, done);
+            return middleware(
+                this.fastifyRequestToApiRequest(request),
+                reply.raw,
+                done,
+            );
         };
     }
 
@@ -92,7 +95,7 @@ export class FastifyServer implements Server {
             request: FastifyRequest,
             reply: FastifyReply,
             done: HookHandlerDoneFunction,
-        ) => void)[] = middlewares.map(this.toFastifyMiddleware);
+        ) => void)[] = middlewares.map(this.toFastifyMiddleware.bind(this));
 
         this.server.route({
             url: path,
@@ -110,6 +113,10 @@ export class FastifyServer implements Server {
     private fastifyRequestToApiRequest(
         fastifyRequest: FastifyRequest,
     ): ApiRequest {
+        if (fastifyRequest instanceof ApiRequest) {
+            return fastifyRequest;
+        }
+
         const headers = new Headers();
         for (const [key, value] of Object.entries(fastifyRequest.headers)) {
             if (Array.isArray(value)) {
@@ -124,14 +131,15 @@ export class FastifyServer implements Server {
                 ? fastifyRequest.body
                 : null;
 
+        console.log((fastifyRequest as any).userUuid);
         // FIXME: create the real url
         return new ApiRequest(
-            new URL(`http://localhost/${fastifyRequest.url}`),
-            {
+            new Request(new URL(`http://localhost/${fastifyRequest.url}`), {
                 method: fastifyRequest.method,
                 headers: headers,
                 body: body as Buffer,
-            },
+            }),
+            fastifyRequest,
         );
     }
 }

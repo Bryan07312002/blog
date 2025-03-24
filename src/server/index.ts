@@ -1,7 +1,28 @@
-import { IncomingMessage, ServerResponse } from "http";
-import { validationError } from "../error";
+import { unauthorizedError, validationError } from "../error";
+import { FastifyRequest } from "fastify";
+import { ServerResponse } from "http";
+import { UUID } from "crypto";
 
+export type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+
+// this is really ugly for now, need to find a way to make
+// this easier to implement
 export class ApiRequest extends Request {
+    // this is needed so we can pass data between middlerwares and requests
+    // not ideal should be changed in the future
+    private rawFastify: FastifyRequest;
+
+    params: unknown;
+    query: unknown;
+
+    constructor(req: Request, fastify: FastifyRequest) {
+        super(req);
+
+        this.params = fastify.params;
+        this.query = fastify.query;
+        this.rawFastify = fastify;
+    }
+
     async string(): Promise<string> {
         if (!this.body) {
             throw "body is null";
@@ -28,12 +49,22 @@ export class ApiRequest extends Request {
         const jsonString = await this.string();
         return JSON.parse(jsonString);
     }
+
+    setAuthenticatedUser(uuid: UUID) {
+        (this.rawFastify as any).userUuid = uuid;
+    }
+
+    athenticatedUser(): UUID {
+        if (!(this.rawFastify as any).userUuid) throw unauthorizedError();
+
+        return (this.rawFastify as any).userUuid;
+    }
 }
 
 export type Handler = (req: ApiRequest, res: ServerResponse) => void;
 
 export type Middleware = (
-    req: IncomingMessage,
+    req: ApiRequest,
     res: ServerResponse,
     next: () => void,
 ) => void;
