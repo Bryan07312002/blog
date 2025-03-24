@@ -1,13 +1,18 @@
-import { PostgresConfig } from "./persistence/database/config";
 import { KyselyDatabaseConnection } from "./persistence/database/connection";
+import { DecodeJwtTokenMiddleware } from "./controllers/middlewares";
+import { PostgresConfig } from "./persistence/database/config";
 import { FastifyServer } from "./server/fastify_server";
-import { RegisterController } from "./controllers/register";
 import {
     ServiceFactory,
     ValidatorFactory,
     RepositoryFactory,
     UUIDGeneratorFactory,
 } from "./controllers/services_factory";
+import {
+    LoginController,
+    RegisterController,
+    RetrieveFullUserController,
+} from "./controllers";
 
 export class App {
     constructor(
@@ -22,7 +27,12 @@ export class App {
 
         const server = new FastifyServer();
 
-        const repositoryFactory = new RepositoryFactory(db, { salt: 10 });
+        const repositoryFactory = new RepositoryFactory(
+            db,
+            { salt: 10 },
+            { expiresIn: "1h", secret: "secret" },
+            { baseUrl: new URL("http://localhost/"), basePath: "media" },
+        );
         const validatorFactory = new ValidatorFactory();
         const uuiDGeneratorFactory = new UUIDGeneratorFactory();
         const serviceFactory = new ServiceFactory(
@@ -49,6 +59,24 @@ export class App {
             new RegisterController(
                 this.serviceFactory,
                 this.serviceFactory.validatorFactory.createRegisterRequestValidator(),
+            ).handler,
+        );
+
+        this.server.post(
+            "/login",
+            [],
+            new LoginController(
+                this.serviceFactory,
+                this.serviceFactory.validatorFactory.createLoginRequestValidator(),
+            ).handler,
+        );
+
+        this.server.get(
+            "/users/:uuid",
+            [new DecodeJwtTokenMiddleware(this.serviceFactory).handler],
+            new RetrieveFullUserController(
+                this.serviceFactory,
+                this.serviceFactory.validatorFactory.createUUIDValidator(),
             ).handler,
         );
     }
