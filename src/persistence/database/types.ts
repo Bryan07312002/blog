@@ -5,14 +5,19 @@ export type Database = {
     users: UsersTable;
     profiles: UserProfilesTable;
     posts: PostsTable;
+    user_roles: UserRoles;
 };
+
+export interface UserRoles {
+    user_uuid: UUID;
+    role: Role;
+}
 
 export interface UsersTable {
     uuid: UUID;
     username: string;
     email: string;
     password: string;
-    role: Role[];
     state: State;
 }
 

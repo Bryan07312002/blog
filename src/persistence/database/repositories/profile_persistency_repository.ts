@@ -6,12 +6,13 @@ import { UUID } from "crypto";
 export class KyselyProfilePersistecyRepository
     implements UserProfilePersistenceRepository
 {
-    constructor(
-        public readonly kyselyDatabaseConnection: KyselyDatabaseConnection,
-    ) {}
+    constructor(public readonly conn: KyselyDatabaseConnection) {}
 
-    create(userUuid: UUID): Promise<void> {
-        throw new Error("Method not implemented.");
+    async create(userUuid: UUID): Promise<void> {
+        await this.conn
+            .insertInto("profiles")
+            .values({ user_uuid: userUuid })
+            .execute();
     }
 
     update(profile: UserProfile): Promise<void> {
