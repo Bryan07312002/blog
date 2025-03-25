@@ -48,7 +48,7 @@ export interface PostPersistenceRepository {
 }
 
 export interface FilePersistenceRepository {
-    save(path: string, file: File): Promise<void>;
+    save(file: File): Promise<void>;
     delete(path: string): Promise<void>;
     getRealUrl(url: string): Promise<string>;
 }

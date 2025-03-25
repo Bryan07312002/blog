@@ -23,9 +23,13 @@ export class UpdateProfilePhotoController extends Controller {
         const blob = new Blob([await img.toBuffer()]);
         const service = this.serviceFactory.createUpdateProfilePhoto();
 
+        const userUuid = req.authUser();
         const dto = new UpdateProfilePhotoDto(
-            req.authUser(),
-            new File([blob], "", { type: img.type }),
+            userUuid,
+            // TODO: quick fix should prepare File Objecet validation later
+            new File([blob], userUuid + img.mimetype.split("/")[1], {
+                type: img.mimetype.split("/")[1],
+            }),
         );
         const url = await service.execute(dto);
 

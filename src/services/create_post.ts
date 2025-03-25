@@ -47,8 +47,10 @@ export class CreatePost {
 
         try {
             await this.postFilePersistenceRepository.save(
-                post.file_url,
-                dto.file,
+                new File(
+                    [await dto.file.arrayBuffer()],
+                    `${post.title}-${post.uuid}.${dto.file.type}`,
+                ),
             );
         } catch (e) {
             await this.postPersistenceRepository.delete(post.uuid);

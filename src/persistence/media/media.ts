@@ -10,9 +10,9 @@ export class FSProfilePhotoFilePersistenceRepository
         private baseUrl: URL,
     ) {}
 
-    async save(imgPath: string, file: File): Promise<void> {
+    async save(file: File): Promise<void> {
         writeFileSync(
-            path.join(this.basePath, imgPath + file.type),
+            path.join(this.basePath, file.name),
             Buffer.from(await file.arrayBuffer()),
         );
     }

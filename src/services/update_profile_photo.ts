@@ -30,13 +30,19 @@ export class UpdateProfilePhoto {
             );
 
         if (profile.profilePhotoUrl)
-            await this.profilePhotoFilePersistenceRepository.delete(
-                profile.profilePhotoUrl,
-            );
+            try {
+                await this.profilePhotoFilePersistenceRepository.delete(
+                    profile.profilePhotoUrl,
+                );
+            } catch {
+                // ignore if throws
+            }
 
         await this.profilePhotoFilePersistenceRepository.save(
-            dto.userUuid,
-            dto.photo,
+            new File(
+                [await dto.photo.arrayBuffer()],
+                `${profile.userUuid}.${dto.photo.type}`,
+            ),
         );
 
         profile.profilePhotoUrl = dto.userUuid;
