@@ -17,7 +17,7 @@ export class DecodeJwtTokenMiddleware extends Middleware {
         const service = this.factory.createDecodeToken();
         const payload = service.execute(token?.replace("Bearer ", "") ?? "");
 
-        req.setAuthenticatedUser(payload as any);
+        req.setAuthenticatedUser(payload.uuid);
 
         next();
     }
