@@ -1,19 +1,19 @@
-import { UserProfilePhotoFilePersistenceRepository } from "../../services";
+import { ProfilePhotoFilePersistenceRepository } from "../../services";
 import { writeFileSync, rmSync } from "fs";
 import * as path from "path";
 
-export class FSUserProfilePhotoFilePersistenceRepository
-    implements UserProfilePhotoFilePersistenceRepository
+export class FSProfilePhotoFilePersistenceRepository
+    implements ProfilePhotoFilePersistenceRepository
 {
     constructor(
         private basePath: string,
         private baseUrl: URL,
     ) {}
 
-    async save(imgPath: string, blob: Blob): Promise<void> {
+    async save(imgPath: string, file: File): Promise<void> {
         writeFileSync(
             path.join(this.basePath, imgPath),
-            Buffer.from(await blob.arrayBuffer()),
+            Buffer.from(await file.arrayBuffer()),
         );
     }
 
@@ -22,6 +22,6 @@ export class FSUserProfilePhotoFilePersistenceRepository
     }
 
     async getRealUrl(url: string): Promise<string> {
-        return new URL(this.baseUrl, url).toString();
+        return new URL(path.join(this.baseUrl.toString(), url)).toString();
     }
 }
