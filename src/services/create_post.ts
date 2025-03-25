@@ -13,7 +13,7 @@ export class CreatePostDto {
     constructor(
         public title: string,
         public user_id: UUID,
-        public file: Blob,
+        public file: File,
     ) {}
 }
 

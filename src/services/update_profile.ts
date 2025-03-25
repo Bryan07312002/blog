@@ -4,7 +4,6 @@ import { UserProfile } from "../models";
 
 export class UpdateProfileDTO {
     constructor(
-        public userUuid: UUID,
         public profile: {
             title?: string;
             bio?: string;
@@ -21,12 +20,12 @@ export class UpdateProfile {
         private readonly UpdateProfileDtoValidator: UpdateProfileDtoValidator,
     ) {}
 
-    async execute(dto: UpdateProfileDTO): Promise<UserProfile> {
+    async execute(userUuid: UUID, dto: UpdateProfileDTO): Promise<UserProfile> {
         await this.UpdateProfileDtoValidator.validate(dto);
 
         const profile =
             await this.userProfilePersistenceRepository.findByUserUUID(
-                dto.userUuid,
+                userUuid,
             );
 
         if (dto.profile.title) profile.title = dto.profile.title;

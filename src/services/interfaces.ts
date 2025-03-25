@@ -48,12 +48,12 @@ export interface PostPersistenceRepository {
 }
 
 export interface FilePersistenceRepository {
-    save(path: string, blob: Blob): Promise<void>;
+    save(path: string, file: File): Promise<void>;
     delete(path: string): Promise<void>;
     getRealUrl(url: string): Promise<string>;
 }
 
-export interface UserProfilePhotoFilePersistenceRepository
+export interface ProfilePhotoFilePersistenceRepository
     extends FilePersistenceRepository {}
 
 export interface PostFilePersistenceRepository

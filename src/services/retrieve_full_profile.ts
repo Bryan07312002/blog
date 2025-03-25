@@ -2,7 +2,7 @@ import { UUID } from "crypto";
 import { Role, State } from "../models";
 import {
     UserPersistenceRepository,
-    UserProfilePhotoFilePersistenceRepository,
+    ProfilePhotoFilePersistenceRepository,
 } from "./interfaces";
 
 export class FullUserProfileDto {
@@ -53,7 +53,7 @@ export class FullUserProfileDto {
 export class RetrieveFullUserProfile {
     constructor(
         public UserPersistenceRepository: UserPersistenceRepository,
-        public userProfilePhotoFilePersistenceRepository: UserProfilePhotoFilePersistenceRepository,
+        public profilePhotoFilePersistenceRepository: ProfilePhotoFilePersistenceRepository,
     ) {}
 
     async execute(userUuid: UUID): Promise<FullUserProfileDto> {
@@ -63,7 +63,7 @@ export class RetrieveFullUserProfile {
         if (user.photo_url)
             try {
                 user.photo_url =
-                    await this.userProfilePhotoFilePersistenceRepository.getRealUrl(
+                    await this.profilePhotoFilePersistenceRepository.getRealUrl(
                         user.photo_url,
                     );
             } catch {
