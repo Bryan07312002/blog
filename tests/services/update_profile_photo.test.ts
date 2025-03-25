@@ -4,7 +4,7 @@ import {
     UpdateProfilePhotoDto,
     UpdateProfilePhotoDtoValidator,
     UserProfilePersistenceRepository,
-    UserProfilePhotoFilePersistenceRepository,
+    ProfilePhotoFilePersistenceRepository,
 } from "../../src/services";
 import { UserProfile } from "../../src/models";
 import {
@@ -17,7 +17,7 @@ import { jest } from "@jest/globals";
 describe("UpdateProfilePhoto", () => {
     let updateProfilePhoto: UpdateProfilePhoto;
     let userProfilePersistenceRepository: jest.Mocked<UserProfilePersistenceRepository>;
-    let userProfilePhotoFilePersistenceRepository: jest.Mocked<UserProfilePhotoFilePersistenceRepository>;
+    let userProfilePhotoFilePersistenceRepository: jest.Mocked<ProfilePhotoFilePersistenceRepository>;
     let updateProfilePhotoDtoValidator: jest.Mocked<UpdateProfilePhotoDtoValidator>;
 
     let dto: UpdateProfilePhotoDto;
@@ -38,7 +38,7 @@ describe("UpdateProfilePhoto", () => {
             updateProfilePhotoDtoValidator,
         );
 
-        dto = new UpdateProfilePhotoDto("user-uuid" as UUID, new Blob());
+        dto = new UpdateProfilePhotoDto("user-uuid" as UUID, new File([], ""));
         profile = new UserProfile(
             "user-uuid" as UUID,
             "Test Title",
