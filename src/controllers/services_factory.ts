@@ -9,6 +9,7 @@ import {
     KyselyDatabaseConnection,
     KyselyUserPersistenceRepository,
     KyselyProfilePersistecyRepository,
+    KyselyPostPersistencyRepository,
 } from "../persistence/database";
 import {
     Register,
@@ -24,6 +25,8 @@ import {
     RetrieveFullUserProfile,
     ProfilePhotoFilePersistenceRepository,
     UpdateProfilePhoto,
+    CreatePost,
+    PostPersistenceRepository,
 } from "../services";
 import {
     ZodRegisterDtoValidator,
@@ -31,6 +34,8 @@ import {
     ZodLoginValidator,
     ZodUUIDValidator,
 } from "../validators";
+import { ZipDecompressor } from "../decompression/zip_decompressor";
+import { MarkdownItMarkdownToHtml } from "../html_converter";
 
 export class RepositoryFactory {
     constructor(
@@ -60,6 +65,10 @@ export class RepositoryFactory {
             this.jwtOption.secret,
             this.jwtOption.expiresIn,
         );
+    }
+
+    createPostPersistenceRepository(): PostPersistenceRepository {
+        return new KyselyPostPersistencyRepository(this.databaseConnection);
     }
 
     createProfilePhotoFilePersistenceRepository(): ProfilePhotoFilePersistenceRepository {
@@ -136,6 +145,20 @@ export class ServiceFactory {
             this.repositoryFactory.createProfilePersistenceRepository(),
             // TODO: change this
             { validate: async () => {} },
+        );
+    }
+
+    createCreatePost(): CreatePost {
+        return new CreatePost(
+            this.repositoryFactory.createPostPersistenceRepository(),
+            //FIXME: just for testing
+            this.repositoryFactory.createProfilePhotoFilePersistenceRepository(),
+            this.repositoryFactory.createUserPersistenceRepository(),
+            { validate: (dto: any) => {} } as any,
+            { check: () => {} },
+            new ZipDecompressor(),
+            new MarkdownItMarkdownToHtml(),
+            this.uuiDGeneratorFactory.createUUIDGenerator(),
         );
     }
 }

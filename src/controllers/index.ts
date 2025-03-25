@@ -20,3 +20,4 @@ export * from "./login";
 export * from "./retrieve_full_user";
 export * from "./update_profile";
 export * from "./update_profile_photo";
+export * from "./create_post";
