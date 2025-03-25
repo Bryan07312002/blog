@@ -1,9 +1,15 @@
+import { FSProfilePhotoFilePersistenceRepository } from "../persistence/media/media";
+import { JWTRepository } from "../jwt/jsonwebtoken_jwt_repository";
+import { CryptoHashRepository } from "../hash";
+import { CryptoUuidGenerator } from "../uuid";
+import { LoginRequestDto } from "./login";
+import { RequestValidator } from ".";
+import { UUID } from "crypto";
 import {
     KyselyDatabaseConnection,
     KyselyUserPersistenceRepository,
     KyselyProfilePersistecyRepository,
 } from "../persistence/database";
-import { CryptoHashRepository } from "../hash";
 import {
     Register,
     UserPersistenceRepository,
@@ -16,7 +22,8 @@ import {
     JwtRepository,
     DecodeToken,
     RetrieveFullUserProfile,
-    UserProfilePhotoFilePersistenceRepository,
+    ProfilePhotoFilePersistenceRepository,
+    UpdateProfilePhoto,
 } from "../services";
 import {
     ZodRegisterDtoValidator,
@@ -24,12 +31,6 @@ import {
     ZodLoginValidator,
     ZodUUIDValidator,
 } from "../validators";
-import { CryptoUuidGenerator } from "../uuid";
-import { RequestValidator } from ".";
-import { JWTRepository } from "../jwt/jsonwebtoken_jwt_repository";
-import { LoginRequestDto } from "./login";
-import { FSUserProfilePhotoFilePersistenceRepository } from "../persistence/media/media";
-import { UUID } from "crypto";
 
 export class RepositoryFactory {
     constructor(
@@ -61,8 +62,8 @@ export class RepositoryFactory {
         );
     }
 
-    createUserProfilePhotoFilePersistenceRepository(): UserProfilePhotoFilePersistenceRepository {
-        return new FSUserProfilePhotoFilePersistenceRepository(
+    createProfilePhotoFilePersistenceRepository(): ProfilePhotoFilePersistenceRepository {
+        return new FSProfilePhotoFilePersistenceRepository(
             this.mediaPersistencyOptions.basePath,
             this.mediaPersistencyOptions.baseUrl,
         );
@@ -125,7 +126,16 @@ export class ServiceFactory {
     createRetrieveFullUserProfile(): RetrieveFullUserProfile {
         return new RetrieveFullUserProfile(
             this.repositoryFactory.createUserPersistenceRepository(),
-            this.repositoryFactory.createUserProfilePhotoFilePersistenceRepository(),
+            this.repositoryFactory.createProfilePhotoFilePersistenceRepository(),
+        );
+    }
+
+    createUpdateProfilePhoto(): UpdateProfilePhoto {
+        return new UpdateProfilePhoto(
+            this.repositoryFactory.createProfilePhotoFilePersistenceRepository(),
+            this.repositoryFactory.createProfilePersistenceRepository(),
+            // TODO: change this
+            { validate: async () => {} },
         );
     }
 }
