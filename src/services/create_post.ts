@@ -1,21 +1,26 @@
 import { UUID } from "crypto";
-import { Post } from "../models/post";
 import {
     CanCreatePostPolicies,
     CreatePostDtoValidator,
+    DecompressionStrategy,
     PostFilePersistenceRepository,
     PostPersistenceRepository,
     UserPersistenceRepository,
+    MarkdownToHtmlStrategy,
     UUIDGenerator,
 } from ".";
+import { validationError } from "../error";
+import { writeFileSync } from "fs";
 
 export class CreatePostDto {
     constructor(
         public title: string,
         public user_id: UUID,
-        public file: File,
+        public file: File, // zip file
     ) {}
 }
+
+const validFileTypes = new Set(["gif", "jpg", "png"]);
 
 export class CreatePost {
     constructor(
@@ -24,43 +29,49 @@ export class CreatePost {
         private readonly userPersistenceRepository: UserPersistenceRepository,
         private readonly createPostDtoValidator: CreatePostDtoValidator,
         private readonly canCreatePostPolicies: CanCreatePostPolicies,
+        private readonly decompressionStrategy: DecompressionStrategy,
+        private readonly markdownToHtmlStrategy: MarkdownToHtmlStrategy,
         private readonly uuidGenerator: UUIDGenerator,
     ) {}
 
-    async execute(dto: CreatePostDto): Promise<Post> {
-        await this.createPostDtoValidator.validate(dto);
-        const user = await this.userPersistenceRepository.findByUUID(
-            dto.user_id,
-        );
-        this.canCreatePostPolicies.check(user);
+    async execute(dto: CreatePostDto): Promise<void> {
+        const files = await this.decompressionStrategy.decompress(dto.file);
+        const { md: markdownFile, resources } = this.findAndPrepare(files);
 
-        const uuid = this.uuidGenerator.generate();
-        const post = new Post(
-            uuid,
-            dto.title,
-            dto.user_id,
-            new Date(),
-            uuid + "_" + dto.title,
-        );
+        const data = await markdownFile.text();
+        const html = this.markdownToHtmlStrategy.convert(data);
+        writeFileSync("html.html", html);
+        console.log(html);
+    }
 
-        await this.postPersistenceRepository.create(post);
+    private findAndPrepare(files: File[]): { md: File; resources: File[] } {
+        let mainMd;
+        const resources = [];
+        for (const file of files) {
+            if (file.type == "md") {
+                if (mainMd)
+                    throw validationError(
+                        "should only contain one markdown file",
+                    );
 
-        try {
-            await this.postFilePersistenceRepository.save(
-                new File(
-                    [await dto.file.arrayBuffer()],
-                    `${post.title}-${post.uuid}.${dto.file.type}`,
-                ),
-            );
-        } catch (e) {
-            await this.postPersistenceRepository.delete(post.uuid);
-            throw e;
+                mainMd = file;
+                continue;
+            }
+
+            if (!validFileTypes.has(file.type))
+                throw validationError(
+                    `invalid file type, type: ${file.type} not supported`,
+                );
+
+            resources.push(file);
         }
 
-        post.file_url = await this.postFilePersistenceRepository.getRealUrl(
-            post.file_url,
-        );
+        if (!mainMd)
+            throw validationError(`Should contain at least one Markdown file`);
 
-        return post;
+        return {
+            md: mainMd,
+            resources,
+        };
     }
 }

@@ -54,8 +54,20 @@ export class ApiRequest extends Request {
         return this.rawFastify.files();
     }
 
-    file() {
-        return this.rawFastify.file();
+    async file(): Promise<File> {
+        const file = await this.rawFastify.file();
+        if (!file)
+            throw validationError("expected photo image", [
+                { field: "photo", message: "required" },
+            ]);
+
+        const buffer = await file.toBuffer(); // Get file as Buffer
+
+        // Convert to a File-like object
+        return new File([buffer], file.filename, {
+            type: file.mimetype,
+            lastModified: Date.now(),
+        });
     }
 
     setAuthenticatedUser(uuid: UUID) {

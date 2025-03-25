@@ -47,6 +47,14 @@ export interface PostPersistenceRepository {
     findByUUID(uuid: UUID): Promise<Post>;
 }
 
+export interface MarkdownToHtmlStrategy {
+    convert(raw: string): string;
+}
+
+export interface DecompressionStrategy {
+    decompress(file: File): Promise<File[]>;
+}
+
 export interface FilePersistenceRepository {
     save(file: File): Promise<void>;
     delete(path: string): Promise<void>;

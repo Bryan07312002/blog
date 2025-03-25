@@ -9,11 +9,13 @@ import {
     UUIDGeneratorFactory,
 } from "./controllers/services_factory";
 import {
+    CreatePostController,
     LoginController,
     RegisterController,
     RetrieveFullUserController,
     UpdateProfilePhotoController,
 } from "./controllers";
+import { CreatePost } from "./services";
 
 export class App {
     constructor(
@@ -85,6 +87,12 @@ export class App {
             "/users/profile/photo",
             [new DecodeJwtTokenMiddleware(this.serviceFactory).handler],
             new UpdateProfilePhotoController(this.serviceFactory).handler,
+        );
+
+        this.server.post(
+            "/post",
+            [new DecodeJwtTokenMiddleware(this.serviceFactory).handler],
+            new CreatePostController(this.serviceFactory).handler,
         );
     }
 
