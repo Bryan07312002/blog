@@ -1,5 +1,6 @@
 import { ApiRequest, Handler, Middleware, Server, Method } from ".";
 import { ApiError } from "../error";
+import FastifyMultipart from "@fastify/multipart";
 import fastify, {
     FastifyInstance,
     FastifyReply,
@@ -41,6 +42,8 @@ export class FastifyServer implements Server {
                 error: "Internal Server Error",
             });
         });
+
+        this.server.register(FastifyMultipart);
     }
 
     get(path: string, middlewares: Middleware[], handler: Handler): void {
