@@ -25,7 +25,7 @@ export class UpdateProfilePhotoController extends Controller {
 
         const dto = new UpdateProfilePhotoDto(
             req.authUser(),
-            new File([blob], ""),
+            new File([blob], "", { type: img.type }),
         );
         const url = await service.execute(dto);
 
