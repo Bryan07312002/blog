@@ -12,7 +12,7 @@ export class FSProfilePhotoFilePersistenceRepository
 
     async save(imgPath: string, file: File): Promise<void> {
         writeFileSync(
-            path.join(this.basePath, imgPath),
+            path.join(this.basePath, imgPath + file.type),
             Buffer.from(await file.arrayBuffer()),
         );
     }

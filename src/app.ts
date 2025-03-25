@@ -12,6 +12,7 @@ import {
     LoginController,
     RegisterController,
     RetrieveFullUserController,
+    UpdateProfilePhotoController,
 } from "./controllers";
 
 export class App {
@@ -78,6 +79,12 @@ export class App {
                 this.serviceFactory,
                 this.serviceFactory.validatorFactory.createUUIDValidator(),
             ).handler,
+        );
+
+        this.server.put(
+            "/users/profile/photo",
+            [new DecodeJwtTokenMiddleware(this.serviceFactory).handler],
+            new UpdateProfilePhotoController(this.serviceFactory).handler,
         );
     }
 
